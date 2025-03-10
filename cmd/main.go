@@ -22,6 +22,6 @@ func main() {
 		return c.SendString("Hello, World 👋!")
 	})
 
-	fmt.Println("Server running on port 3000...")
-	log.Fatal(app.Listen(":3000"))
+	fmt.Println("Server running on port 8000...")
+	log.Fatal(app.Listen(":8000"))
 }
