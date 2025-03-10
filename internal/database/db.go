@@ -20,7 +20,7 @@ func ConnectDB(cfg *config.Config) {
 		cfg.PostgresPort,
 		cfg.PostgresDB,
 	)
-
+	log.Println(dsn)
 	config, err := pgxpool.ParseConfig(dsn)
 	if err != nil {
 		log.Fatalf("Failed to parse DB config: %v", err)

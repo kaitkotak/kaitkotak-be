@@ -1,11 +1,7 @@
 package config
 
 import (
-	"log"
 	"os"
-	"path/filepath"
-
-	"github.com/joho/godotenv"
 )
 
 // Config holds database configuration
@@ -19,12 +15,6 @@ type Config struct {
 
 // LoadConfig reads configuration from `configs/.env`
 func LoadConfig() *Config {
-	envPath := filepath.Join("configs", ".env")
-
-	if err := godotenv.Load(envPath); err != nil {
-		log.Printf("No .env file found at %s, using system environment variables\n", envPath)
-	}
-
 	return &Config{
 		PostgresUser:     os.Getenv("POSTGRES_USER"),
 		PostgresPassword: os.Getenv("POSTGRES_PASSWORD"),

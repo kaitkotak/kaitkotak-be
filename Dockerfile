@@ -1,30 +1,30 @@
-# Use official lightweight Golang image
-FROM golang:1.21-alpine AS builder
+# Use Golang with Alpine as the base image
+FROM golang:1.23-alpine AS builder
 
-# Set working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy go modules and download dependencies
+# Copy go.mod and go.sum files and download dependencies
 COPY go.mod go.sum ./
-RUN go mod download
+RUN go mod tidy
 
-# Copy the source code
+# Copy the entire application code
 COPY . .
 
-# Build the Go binary
+# Build the Go application
 RUN go build -o main ./cmd/main.go
 
-# Use a minimal base image
+# Create a minimal runtime image with Alpine
 FROM alpine:latest
 
-# Set working directory
+# Set working directory in the final container
 WORKDIR /root/
 
-# Copy the binary from builder
+# Copy the compiled binary from the builder stage
 COPY --from=builder /app/main .
 
-# Expose port 3000
-EXPOSE 3000
+# Expose the application port
+EXPOSE 8000
 
-# Start the application
+# Run the application
 CMD ["./main"]
