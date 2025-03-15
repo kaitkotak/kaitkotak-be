@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"time"
+
 	"github.com/kaitkotak-be/internal/config"
 	"github.com/kaitkotak-be/internal/database"
 
@@ -23,6 +25,13 @@ import (
 // 	log.Fatal(app.Listen(":8000"))
 // }
 
+type User struct {
+	ID        int       `json:"id"`
+	Name      string    `json:"name"`
+	JobTitle  string    `json:"job_title"`
+	CreatedAt time.Time `json:"created_at"`
+}
+
 func NewApp() *fiber.App {
 	cfg := config.LoadConfig()
 
@@ -36,5 +45,33 @@ func NewApp() *fiber.App {
 		return c.SendString("Hello, World 👋!") // Ensure this returns an `error`
 	})
 
+	app.Get("/users", func(c fiber.Ctx) error {
+		users, err := getUsers()
+		if err != nil {
+			return c.Status(500).JSON(fiber.Map{"error": "Failed to fetch users"})
+		}
+		return c.JSON(users)
+	})
+
 	return app
+}
+
+func getUsers() ([]User, error) {
+	db := database.DB
+	rows, err := db.Query("SELECT id, name, job_title, created_at FROM users")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var users []User
+	for rows.Next() {
+		var user User
+		if err := rows.Scan(&user.ID, &user.Name, &user.JobTitle, &user.CreatedAt); err != nil {
+			return nil, err
+		}
+		users = append(users, user)
+	}
+
+	return users, nil
 }
