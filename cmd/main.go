@@ -53,11 +53,11 @@ func NewApp() *fiber.App {
 	app := fiber.New()
 
 	// Fix the handler signature
-	app.Get("/", func(c fiber.Ctx) error {
-		return c.SendString("Hello, World 👋!") // Ensure this returns an `error`
-	})
+	// app.Get("/", func(c fiber.Ctx) error {
+	// 	return c.SendString("Hello, World 👋!") // Ensure this returns an `error`
+	// })
 
-	app.Get("/users", func(c fiber.Ctx) error {
+	app.Get("/", func(c fiber.Ctx) error {
 		users, err := getUsers()
 		if err != nil {
 			log.Println("Failed to fetch users:", err)
