@@ -6,7 +6,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/joho/godotenv"
 	"github.com/kaitkotak-be/internal/config"
 	"github.com/kaitkotak-be/internal/database"
 
@@ -29,14 +28,14 @@ import (
 // 	log.Fatal(app.Listen(":8000"))
 // }
 
-func init() {
-	err := godotenv.Load() // Load .env file
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+// func init() {
+// 	err := godotenv.Load() // Load .env file
+// 	if err != nil {
+// 		log.Fatal("Error loading .env file")
+// 	}
 
-	log.Println("✅ .env file loaded successfully")
-}
+// 	log.Println("✅ .env file loaded successfully")
+// }
 
 type User struct {
 	ID        int       `json:"id"`
