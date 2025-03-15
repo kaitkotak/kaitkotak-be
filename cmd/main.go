@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"time"
 
@@ -69,15 +68,12 @@ func NewApp() *fiber.App {
 	return app
 }
 
-func getUsers() ([]User, error) {
-	ctx := context.Background()
+func getUsers(ctx context.Context) ([]User, error) {
+	// Open a new database connection
+	cfg := config.LoadConfig()
+	database.ConnectDB(cfg)
+	defer database.CloseDB() // Ensure connection is closed after function ends
 
-	// Ensure the database connection is available
-	if database.DB == nil {
-		return nil, fmt.Errorf("database connection is nil")
-	}
-
-	// Execute the query
 	rows, err := database.DB.Query(ctx, "SELECT id, name, job_title, created_at FROM users")
 	if err != nil {
 		log.Println("Database query error:", err)
@@ -89,9 +85,15 @@ func getUsers() ([]User, error) {
 	for rows.Next() {
 		var user User
 		if err := rows.Scan(&user.ID, &user.Name, &user.JobTitle, &user.CreatedAt); err != nil {
+			log.Println("Row scan error:", err)
 			return nil, err
 		}
 		users = append(users, user)
+	}
+
+	if err = rows.Err(); err != nil {
+		log.Println("Rows iteration error:", err)
+		return nil, err
 	}
 
 	return users, nil
