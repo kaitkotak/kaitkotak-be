@@ -20,13 +20,14 @@ func ConnectDB(cfg *config.Config) {
 		cfg.PostgresPort,
 		cfg.PostgresDB,
 	)
-	log.Println(dsn)
+
+	// Print to debug
+	log.Println("Generated DSN:", dsn)
+
 	config, err := pgxpool.ParseConfig(dsn)
 	if err != nil {
 		log.Fatalf("Failed to parse DB config: %v", err)
 	}
-
-	// config.ConnConfig.PreferSimpleProtocol = true
 
 	pool, err := pgxpool.NewWithConfig(context.Background(), config)
 	if err != nil {

@@ -1,8 +1,12 @@
 package cmd
 
 import (
+	"context"
+	"fmt"
+	"log"
 	"time"
 
+	"github.com/joho/godotenv"
 	"github.com/kaitkotak-be/internal/config"
 	"github.com/kaitkotak-be/internal/database"
 
@@ -24,6 +28,15 @@ import (
 // 	fmt.Println("Server running on port 8000...")
 // 	log.Fatal(app.Listen(":8000"))
 // }
+
+func init() {
+	err := godotenv.Load() // Load .env file
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	log.Println("✅ .env file loaded successfully")
+}
 
 type User struct {
 	ID        int       `json:"id"`
@@ -48,7 +61,8 @@ func NewApp() *fiber.App {
 	app.Get("/users", func(c fiber.Ctx) error {
 		users, err := getUsers()
 		if err != nil {
-			return c.Status(500).JSON(fiber.Map{"error": "Failed to fetch users"})
+			log.Println("Failed to fetch users:", err)
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to fetch users"})
 		}
 		return c.JSON(users)
 	})
@@ -57,9 +71,17 @@ func NewApp() *fiber.App {
 }
 
 func getUsers() ([]User, error) {
-	db := database.DB
-	rows, err := db.Query("SELECT id, name, job_title, created_at FROM users")
+	ctx := context.Background()
+
+	// Ensure the database connection is available
+	if database.DB == nil {
+		return nil, fmt.Errorf("database connection is nil")
+	}
+
+	// Execute the query
+	rows, err := database.DB.Query(ctx, "SELECT id, name, job_title, created_at FROM users")
 	if err != nil {
+		log.Println("Database query error:", err)
 		return nil, err
 	}
 	defer rows.Close()
