@@ -44,6 +44,15 @@ CREATE TABLE transport_vehicles (
     phone_number VARCHAR(15) UNIQUE
 );
 
+-- Table for Productions
+CREATE TABLE productions (
+    id SERIAL PRIMARY KEY,
+    item_id INT REFERENCES items(id) ON DELETE CASCADE,
+    production_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    quantity NUMERIC(10,2) NOT NULL, 
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
 
 -- Table for Raw Materials
 CREATE TABLE raw_materials (
@@ -54,16 +63,6 @@ CREATE TABLE raw_materials (
     available_stock NUMERIC(10,2) GENERATED ALWAYS AS (COALESCE(stock_opname, stock_in) - stock_out) STORED,
     note TEXT,
     stock_date DATE NOT NULL DEFAULT CURRENT_DATE,
-    created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW()
-);
-
--- Table for Productions
-CREATE TABLE productions (
-    id SERIAL PRIMARY KEY,
-    item_id INT REFERENCES items(id) ON DELETE CASCADE,
-    production_date DATE NOT NULL DEFAULT CURRENT_DATE,
-    quantity NUMERIC(10,2) NOT NULL, 
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
