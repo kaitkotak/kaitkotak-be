@@ -57,10 +57,10 @@ func NewApp() *fiber.App {
 	// })
 
 	app.Get("/", func(c fiber.Ctx) error {
-		users, err := getUsers()
+		// Call getUsers with a new context
+		users, err := getUsers(context.Background())
 		if err != nil {
-			log.Println("Failed to fetch users:", err)
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to fetch users"})
+			return c.Status(500).JSON(fiber.Map{"error": "Failed to fetch users"})
 		}
 		return c.JSON(users)
 	})
