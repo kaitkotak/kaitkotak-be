@@ -1,9 +1,8 @@
-package cmd
+package main
 
 import (
-	"context"
+	"fmt"
 	"log"
-	"time"
 
 	"github.com/kaitkotak-be/internal/config"
 	"github.com/kaitkotak-be/internal/database"
@@ -11,39 +10,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
-// func main() {
-// 	cfg := config.LoadConfig()
-
-// 	database.ConnectDB(cfg)
-// 	defer database.CloseDB()
-
-// 	app := fiber.New()
-
-// 	app.Get("/", func(c fiber.Ctx) error {
-// 		return c.SendString("Hello, World 👋!")
-// 	})
-
-// 	fmt.Println("Server running on port 8000...")
-// 	log.Fatal(app.Listen(":8000"))
-// }
-
-// func init() {
-// 	err := godotenv.Load() // Load .env file
-// 	if err != nil {
-// 		log.Fatal("Error loading .env file")
-// 	}
-
-// 	log.Println("✅ .env file loaded successfully")
-// }
-
-type User struct {
-	ID        int       `json:"id"`
-	Name      string    `json:"name"`
-	JobTitle  string    `json:"job_title"`
-	CreatedAt time.Time `json:"created_at"`
-}
-
-func NewApp() *fiber.App {
+func main() {
 	cfg := config.LoadConfig()
 
 	database.ConnectDB(cfg)
@@ -51,50 +18,10 @@ func NewApp() *fiber.App {
 
 	app := fiber.New()
 
-	// Fix the handler signature
-	// app.Get("/", func(c fiber.Ctx) error {
-	// 	return c.SendString("Hello, World 👋!") // Ensure this returns an `error`
-	// })
-
 	app.Get("/", func(c fiber.Ctx) error {
-		// Call getUsers with a new context
-		users, err := getUsers(context.Background())
-		if err != nil {
-			return c.Status(500).JSON(fiber.Map{"error": "Failed to fetch users"})
-		}
-		return c.JSON(users)
+		return c.SendString("Hello, World 👋!")
 	})
 
-	return app
-}
-
-func getUsers(ctx context.Context) ([]User, error) {
-	// Open a new database connection
-	cfg := config.LoadConfig()
-	database.ConnectDB(cfg)
-	defer database.CloseDB() // Ensure connection is closed after function ends
-
-	rows, err := database.DB.Query(ctx, "SELECT id, name, job_title, created_at FROM users")
-	if err != nil {
-		log.Println("Database query error:", err)
-		return nil, err
-	}
-	defer rows.Close()
-
-	var users []User
-	for rows.Next() {
-		var user User
-		if err := rows.Scan(&user.ID, &user.Name, &user.JobTitle, &user.CreatedAt); err != nil {
-			log.Println("Row scan error:", err)
-			return nil, err
-		}
-		users = append(users, user)
-	}
-
-	if err = rows.Err(); err != nil {
-		log.Println("Rows iteration error:", err)
-		return nil, err
-	}
-
-	return users, nil
+	fmt.Println("Server running on port 8000...")
+	log.Fatal(app.Listen(":8000"))
 }
