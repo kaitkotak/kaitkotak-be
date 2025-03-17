@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/kaitkotak-be/internal/config"
 )
@@ -29,6 +30,9 @@ func ConnectDB(cfg *config.Config) {
 		log.Fatalf("Failed to parse DB config: %v", err)
 	}
 
+	// Access ConnConfig and set PreferSimpleProtocol
+	connConfig := config.ConnConfig
+	connConfig.DefaultQueryExecMode = pgx.QueryExecModeSimpleProtocol // Disable prepared statements
 	pool, err := pgxpool.NewWithConfig(context.Background(), config)
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
@@ -41,6 +45,7 @@ func ConnectDB(cfg *config.Config) {
 func CloseDB() {
 	if DB != nil {
 		DB.Close()
+		DB = nil // Ensure DB is nil after closing
 		fmt.Println("Database connection closed.")
 	}
 }
