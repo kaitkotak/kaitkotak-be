@@ -4,7 +4,7 @@ import (
 	"database/sql"
 
 	"github.com/gofiber/fiber/v3/log"
-	"github.com/kaitkotak-be/internal/shared"
+	"github.com/kaitkotak-be/internal/shared/helper"
 )
 
 type Service interface {
@@ -32,7 +32,7 @@ func (s *service) GetTransportVehicleById(id int) (*TransportVehicle, error) {
 }
 
 func (s *service) CreateTransportVehicle(body *TransportVehicleRequestBody) error {
-	if err := shared.ValidateStruct(body); err != nil {
+	if err := helper.ValidateStruct(body); err != nil {
 		log.Error(err)
 		return err
 	}

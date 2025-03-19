@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/joho/godotenv"
 	"github.com/kaitkotak-be/internal/config"
 	"github.com/kaitkotak-be/internal/database"
 	"github.com/kaitkotak-be/internal/routes"
@@ -13,16 +12,11 @@ import (
 )
 
 func init() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("Error loading .env file")
-	}
+	config.LoadConfig()
 }
 
 func main() {
-	cfg := config.LoadConfig()
-
-	database.ConnectDB(cfg)
+	database.ConnectDB()
 	defer database.CloseDB()
 
 	app := fiber.New()
@@ -33,5 +27,5 @@ func main() {
 
 	routes.SetupRoutes(app)
 	fmt.Println("Server running on port 8000...")
-	log.Fatal(app.Listen(":8000"))
+	log.Fatal(app.Listen(":80"))
 }

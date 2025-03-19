@@ -18,7 +18,7 @@ CREATE TABLE "items" (
 CREATE TABLE "salespeople" (
   "id" SERIAL PRIMARY KEY,
   "full_name" VARCHAR(255) NOT NULL,
-  "phone" VARCHAR(15) UNIQUE,
+  "phone_number" VARCHAR(15) UNIQUE,
   "address" VARCHAR(255),
   "ktp" VARCHAR(100) UNIQUE,
   "ktp_photo" VARCHAR(255),
@@ -29,7 +29,7 @@ CREATE TABLE "customers" (
   "id" SERIAL PRIMARY KEY,
   "customer_code" VARCHAR(100) UNIQUE,
   "full_name" VARCHAR(255) NOT NULL,
-  "phone" VARCHAR(15) UNIQUE,
+  "phone_number" VARCHAR(15) UNIQUE,
   "salesperson_id" INT REFERENCES "salespeople" ("id") ON DELETE SET NULL,
   "address" VARCHAR(255),
   "invoice_code" VARCHAR(100) UNIQUE,

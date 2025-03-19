@@ -4,3 +4,4 @@ vendor
 .env
 *.md
 .vscode
+assets/upload/*

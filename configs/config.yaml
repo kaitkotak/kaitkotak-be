@@ -1,0 +1,12 @@
+
+database:
+  user: postgres.kxzfqdeaevpefyohmvlc 
+  password: rjyXNhjvlwGKljX3
+  host: aws-0-ap-southeast-1.pooler.supabase.com
+  port: "6543"
+  db: postgres
+upload-file:
+  max-size: 5120
+  temp-dir: "assets/upload/temp"
+  upload-dir: "assets/upload/uploaded-file"
+  allowed-types: [".jpg", ".jpeg", ".png", ".gif", ".webp"]

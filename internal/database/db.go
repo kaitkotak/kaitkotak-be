@@ -12,14 +12,14 @@ import (
 
 var DB *pgxpool.Pool
 
-func ConnectDB(cfg *config.Config) {
+func ConnectDB() {
 	dsn := fmt.Sprintf(
 		"postgresql://%s:%s@%s:%s/%s",
-		cfg.PostgresUser,
-		cfg.PostgresPassword,
-		cfg.PostgresHost,
-		cfg.PostgresPort,
-		cfg.PostgresDB,
+		config.Value.String("database.user"),
+		config.Value.String("database.password"),
+		config.Value.String("database.host"),
+		config.Value.String("database.port"),
+		config.Value.String("database.db"),
 	)
 
 	// Print to debug

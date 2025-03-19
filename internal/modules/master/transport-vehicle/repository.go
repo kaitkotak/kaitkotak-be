@@ -32,6 +32,7 @@ func (r *repository) FindAll() ([]TransportVehicle, error) {
 	defer rows.Close()
 
 	var transportvehicles []TransportVehicle
+	transportvehicles = []TransportVehicle{}
 	for rows.Next() {
 		var transportvehicle TransportVehicle
 		if err := rows.Scan(&transportvehicle.ID, &transportvehicle.DriverName, &transportvehicle.VehicleNumber, &transportvehicle.PhoneNumber); err != nil {

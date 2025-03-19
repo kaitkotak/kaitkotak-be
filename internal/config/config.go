@@ -1,25 +1,26 @@
 package config
 
 import (
-	"os"
+	"fmt"
+
+	filehelper "github.com/kaitkotak-be/internal/shared/file-helper"
+	"github.com/knadh/koanf/parsers/yaml"
+	"github.com/knadh/koanf/providers/file"
+	"github.com/knadh/koanf/v2"
 )
 
-// Config holds database configuration
-type Config struct {
-	PostgresUser     string
-	PostgresPassword string
-	PostgresHost     string
-	PostgresPort     string
-	PostgresDB       string
-}
+var Value = koanf.New(".")
 
-// LoadConfig reads configuration from `configs/.env`
-func LoadConfig() *Config {
-	return &Config{
-		PostgresUser:     os.Getenv("POSTGRES_USER"),
-		PostgresPassword: os.Getenv("POSTGRES_PASSWORD"),
-		PostgresHost:     os.Getenv("POSTGRES_HOST"),
-		PostgresPort:     os.Getenv("POSTGRES_PORT"),
-		PostgresDB:       os.Getenv("POSTGRES_DB"),
+func LoadConfig() {
+	configPath, err := filehelper.GetAbsolutePath("configs/config.yaml")
+	if err != nil {
+		fmt.Println("Error getting working directory:", err)
+		return
 	}
+
+	err = Value.Load(file.Provider(configPath), yaml.Parser())
+	if err != nil {
+		fmt.Println("Error loading config file:", err)
+	}
+	Value.Load(file.Provider("./configs/config.yml"), yaml.Parser())
 }

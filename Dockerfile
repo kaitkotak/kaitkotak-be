@@ -23,6 +23,10 @@ WORKDIR /root/
 # Copy the compiled binary from the builder stage
 COPY --from=builder /app/main .
 
+# Copy assets and configs folders
+COPY --from=builder /app/assets ./assets
+COPY --from=builder /app/configs ./configs
+
 # Expose the application port
 EXPOSE 80
 
